@@ -24,6 +24,8 @@ from pyromod import listen
 from subprocess import getstatusoutput
 from pytube import YouTube
 from telegram import Update
+from telegram.ext import ContextTypes
+from telegram.ext import Application, CommandHandler
 
 from pyrogram import Client, filters
 from pyrogram.types import Message
