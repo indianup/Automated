@@ -497,7 +497,6 @@ async def auto_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await input0.delete(True)
     
         raw_text2 == "360"
-            res = "640x360"
     
         raw_text3 == "𝕰𝖓𝖌𝖎𝖓𝖊𝖊𝖗𝖘 𝕭𝖆𝖇𝖚"
     
