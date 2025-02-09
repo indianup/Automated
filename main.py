@@ -131,7 +131,7 @@ async def sudo_command(bot: Client, message: Message):
                 await message.reply_text(f"**⚠️ User {target_user_id} is already in the sudo list.**")
         elif action == "remove":
             if target_user_id == OWNER_ID:
-                await message.reply_text("**🚫 The owner cannot be removed from the sudo list.**")
+                await message.reply_text("**⛔ The owner cannot be removed from the sudo list.**")
             elif target_user_id in SUDO_USERS:
                 SUDO_USERS.remove(target_user_id)
                 await message.reply_text(f"**✅ User {target_user_id} removed from sudo list.**")
@@ -142,11 +142,24 @@ async def sudo_command(bot: Client, message: Message):
     except Exception as e:
         await message.reply_text(f"**Error:** {str(e)}")
 
+# Check if a chat (channel/group) is authorized
+def is_chat_authorized(chat_id: int) -> bool:
+    return chat_id in authorized_channels or chat_id in authorized_groups
+
 # Start command handler
-@bot.on_message(filters.command(["start"]))
-async def start_command(bot: Client, message: Message):
-    if not is_authorized(message.from_user.id):
+@Client.on_message(filters.command(["start"]))
+async def start_command(client: Client, message: Message):
+    user_id = message.from_user.id
+    chat_id = message.chat.id
+
+    # Check if the user is authorized
+    if not is_authorized(user_id):
         await message.reply_text("**🚫 You are not authorized to use this bot.**")
+        return
+
+    # Check if the chat (channel/group) is authorized
+    if message.chat.type in ["channel", "group", "supergroup"] and not is_chat_authorized(chat_id):
+        await message.reply_text("**🚫 This chat is not authorized to use this bot.**")
         return
 
     await bot.send_photo(
